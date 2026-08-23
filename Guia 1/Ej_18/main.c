@@ -4,37 +4,15 @@
 
 const int MAX = 18;
 
-
-void binario(int n){
-    char s[18] = "";
-    int i;
-    for(i = 0; i < MAX; i++){
-        s[i] = ((n >> MAX - 1 - i) & 0x01) + '0';
-    }
-    s[MAX] = '\0';
-    //printf("numero binario: %s\n", s);
-}
-
 int carToInt(char * s){
     int n=0, i, tamanio = 0;
     int digitos[16];
 
-    //printf("str: %s\n", s);
-
     while (s[tamanio] != '\0' && tamanio < 14)
         tamanio++;
 
-    //printf("tamanio: %d\n", tamanio);
-
     for(i = 0; i < tamanio; i++){
         s[i] -= 0x30;
-    }
-    for(i = 0; i < tamanio; i++){
-        //printf("c: %x\n", s[i]);
-    }
-
-    for(i = 0; i < tamanio; i++){
-        binario(s[i]);
     }
 
     int res ;
@@ -42,7 +20,6 @@ int carToInt(char * s){
     int total = 0;
 
     for(i = 0 ; i < tamanio; i++){
-        //printf("num: %d\n", s[i]);
         int mult = 10;
         if (i == tamanio - 1) {
             mult = 1;
@@ -55,15 +32,9 @@ int carToInt(char * s){
             }
         }
         res = s[i] * mult ;
-        //printf("mult: %d\n", mult);
-        //printf("res: %d\n", res);
         digitos[i] = res;
-        //printf("Digito %d: %d\n", i, digitos[i]);
         total += digitos[i];
-
-
     }
-    //printf("numeros: %s\n", s);
     return total;
 
 
