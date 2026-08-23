@@ -2,35 +2,12 @@
 #include <stdlib.h>
 const int MAX = 8;
 
-
-int posbin(int num){
-    switch (num){
-        case 0: return 1;
-        case 1: return 2;
-        case 3: return 4;
-        case 4: return 8;
-        case 5: return 16;
-        case 6: return 32;
-    }
-}
-
 void weekday_set(char *c, int num){
-    *c = *c | posbin(num);
+    *c |= (1 << num );
 }
 
 void weekday_reset(char *c, int num){
-    *c = *c & ( 255 - posbin(num) );
-}
-
-void binario(int n, char *s){
-    int i;
-    for(i = 0; i < MAX; i++){
-        s[MAX - 1 - i] = ((n >> i) & 0x01) + '0';
-    }
-    s[MAX] = '\0';
-    printf("numero binario: %s\n", s);
-
-    return 0;
+     *c &=  ~(1 << num);
 }
 
 int main()
