@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1787469261 source:c:\users\cabro\onedrive\desktop\arq comp\ejercicios programacion\guia 1\ej_18\main.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+
