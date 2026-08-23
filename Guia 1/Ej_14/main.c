@@ -2,14 +2,24 @@
 #include <stdlib.h>
 const int MAX = 8;
 
-void weekday_set(char * c, int num){
-    c[num] = '1';
-    return 0;
+
+int posbin(int num){
+    switch (num){
+        case 0: return 1;
+        case 1: return 2;
+        case 3: return 4;
+        case 4: return 8;
+        case 5: return 16;
+        case 6: return 32;
+    }
 }
 
-void weekday_reset(char * c, int num){
-    c[num] = '0';
-    return 0;
+void weekday_set(char *c, int num){
+    *c = *c | posbin(num);
+}
+
+void weekday_reset(char *c, int num){
+    *c = *c & ( 255 - posbin(num) );
 }
 
 void binario(int n, char *s){
@@ -25,25 +35,25 @@ void binario(int n, char *s){
 
 int main()
 {
-    char s[8] = "0000000\0";
+    char c = '\0';
     int n;
     int opt = 1;
+
     while(opt == 1 || opt ==2){
         printf("Que desea hacer: 1=setear; 2=resetear; otro=salir\n");
         scanf("%d" , &opt);
 
         if (opt == 1){
-            printf("Ingrese dia a setear: (1-6)\n");
+            printf("Ingrese dia a setear: (0-6)\n");
             scanf("%d" , &n);
-            weekday_set(s, n);
+            weekday_set(&c, n);
         } else if (opt == 2){
-            printf("Ingrese dia a resetear: (1-6)\n");
+            printf("Ingrese dia a resetear: (0-6)\n");
             scanf("%d" , &n);
-            weekday_reset(s, n);
+            weekday_reset(&c, n);
         }
-        printf("%s \n", s);
+        printf("Dias en bin: %d\n", c);
     }
-    printf("Dias en bin: %s\n", s);
     return 0;
 }
 
