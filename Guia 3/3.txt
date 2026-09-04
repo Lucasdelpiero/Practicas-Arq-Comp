@@ -1,0 +1,50 @@
+MOV EAX, 0X01
+MOV EDX, DS
+LDH ECX, 4
+LDL ECX, 1
+MOV AC, 0		; Cuanto se tiene que mover la mascara
+
+SYS 0X01		; Lee un numero decimal	
+
+BUSCA1:
+MOV EFX, EDX		; EFX guarda el numero que luego se modifica con la mascara
+MOV EBX, 0X8000		; La mascara tiene un bit a la izquierda de todo y luego se desplaza
+SHR EBX, AC
+AND EFX, EBX
+
+CMP EFX, 1		; while hasta encontrar un uno
+JZ RECORRE
+ADD AC, 1		
+JNZ BUSCA1
+
+
+RECORRE:
+CMP 16, AC
+JZ FIN
+MOV EFX, EDX		; EFX guarda el numero que luego se modifica con la mascara
+MOV EBX, 0X8000		; La mascara tiene un bit a la izquierda de todo y luego se desplaza
+SHR EBX, AC
+AND EFX, EBX		; La mascara saca un cero o algo distinto de cero
+
+CMP EFX, 0		; Escribe uno o cero dependiendo de lo que agarre la mascara
+MOV EBX, EDX		; guarda temporalmente el EDX antes de reemplazar el valor por 1 o 0 para escribirlo
+JZ CERO;
+JNZ UNO;
+
+
+CERO:
+MOV EDX, 0
+JMP ESCRIBE
+
+UNO:
+MOV EDX, 1
+JMP ESCRIBE
+
+ESCRIBE:		; Escribe 1 o 0
+SYS 0X02
+MOV EDX, EBX		; valor original del usuario temporalmente en EBX vuelve a EDX
+ADD AC, 1
+JUMP RECORRE
+
+FIN:
+STOP

@@ -1,0 +1,59 @@
+MOV EAX, 0X01
+MOV EBX, 0	; cant de datos ingresados
+
+LEER:
+MOV EDX, [DS + EBX]
+LDH ECX, 4
+LDL ECX, 1
+SYS 0X01
+
+CMP [EDX], 0	; si ingresa negativo deja de agregar datos
+JN SIGUE
+ADD EBX, 1
+JMP LEER;	; si no es negativo lo agrega
+MULT EBX, 4	; se multiplica la cant de valores por el tamaño y se llega hasta donde esta el ultimo dato
+ADD EBX, 4	; EBX ahora guarda hasta donde hay que leer (skipea si llega aca
+
+SIGUE:
+MOV EDX, DS		; comienza a leer desde la posicion del DS
+
+;---------CICLO EXTERNO
+
+CICLONUMERO:
+MOV ECX, 0X1		; mascara
+CMP EDX, EBX		; si llego a una posicion mas alla del final de donde guarde numeros, termino
+JZ FIN
+MOV EFX, 0		; EFX = cant unos
+MOV AC, 0		; AC = i
+	
+;---------CICLO INTERNO
+
+CICLOBITS:
+MOV EEX, [EDX]		; guardo el contenido
+AND [EDX], ECX		; se hace mascara (luego se reasigna para no perderlo)
+
+JZ NOSUMA		; si a la mascara da cero el (CC ZERO) se activa y no suma un uno
+ADD EFX, 1		; si hay un 1 entonces suma 1
+
+NOSUMA:
+MOV [EDX], EEX		; reasigna contenido a EDX
+ADD AC, 1
+SHL ECX, 1		; shifteo mascara para recorrer todos los bits
+CMP AC, 16		; recorro 16 bits
+JNZ CICLOBITS
+
+;---------FIN CICLO INTERNO
+
+MOV EAX, 0X01		; me preparo para leer la cant de unos
+LDH ECX, 4
+LDL ECX, 1
+MOV [EDX], EFX		; guardo la cant de unos en donde estaba el numero
+SYS 0X02		; leo la cant de unos
+
+ADD EDX, 4		; si ya termino de leer un numero el puntero apunta al siguiente 
+JMP CICLONUMERO 
+
+;---------FIN CICLO EXTERNO
+
+FIN:
+STOP

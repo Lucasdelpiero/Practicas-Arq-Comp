@@ -1,0 +1,31 @@
+MOV EAX, 0X01	; EFX guarda si es primo o no
+MOV EDX, DS
+LDH ECX, 4
+LDL ECX, 1
+SYS 0X01
+MOV EAX, 2		; i = 2 
+
+CICLO:
+CMP EAX, [EDX]		; i = n
+JZ ESPRIMO
+
+MOV EBX, [EDX]	; quiero seguir teniendo el valor de n asi que lo guardo  // [EBX] o EBX ????
+DIV EBX, EAX		
+CMP AC, 0		; si el resto da cero entonces no es primo
+
+JZ NOESPRIMO:
+ADD EAX, 1
+JMP CICLO
+
+ESPRIMO:
+MOV EFX, 1
+JMP FIN
+
+NOESPRIMO:
+MOV EFX, 0
+JMP FIN
+
+FIN:
+MOV EAX, 0X01
+MOV [EDX], EFX
+STOP

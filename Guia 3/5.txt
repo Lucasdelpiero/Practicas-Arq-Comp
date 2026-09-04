@@ -1,0 +1,35 @@
+MOV EAX, 0X01
+MOV EDX, DS
+LDH ECX, 1
+LDL ECX, 4
+SYS 0X01
+
+
+MOV EAX, EDX		; EAX primer arg
+MOV EBX, EAX		; EBX segundo arg
+MOV EFX, 0		; EFX resultado
+
+EMPIEZA:
+MOV ECX, EBX		; copia de segundo arg que se resta en ciclo
+
+CICLO:
+CMP ECX, 0
+JZ FINMULTI
+ADD EFX, EAX
+SUB ECX, 1
+JMP CICLO
+
+FINMULTI:
+SUB EBX, 1
+CMP EBX, 0
+MOV EAX, EFX		; lo que se va a multiplicar luego es el resultado
+JNZ EMPIEZA
+
+
+MOV EAX, 0X01
+MOV EDX, DS
+LDH ECX, 1
+LDL ECX, 4
+MOV EDX, EFX
+SYS 0X02
+STOP

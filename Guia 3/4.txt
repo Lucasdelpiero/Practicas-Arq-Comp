@@ -1,0 +1,30 @@
+MOV EBX, 4	;supongamos que son enteros de 2 bytes, o sea 16 bits
+MOV ECX, 3
+MOV EAX, 0	; resultado producto
+MOV AC, 0
+MOV EDX, 0X01	; mascara de 1 bit a la derecha de todo
+
+CICLO:
+CMP 16, AC	; while de 16 digitos
+JZ FIN
+
+MOV EFX, ECX	; paso el segundo valor para luego enmascararlo     
+AND EFX, EDX	; si su digito es 1 le sumo el numero shifteado	
+ADD AC, 1	; i++
+SHL EDX, 1	; mascara se pone en posicion para chequear el bit del segundo valor
+
+CMP EFX, 0;	; Si el bit es 1 suma
+JZ NOSUMA
+JNZ SUMA
+
+NOSUMA:
+SHL EBX, 1	; Se shiftea antes del nuevo ciclo se sume o no
+JMP CICLO
+
+SUMA:
+ADD EAX, EBX	; Si el bit del segundo valor != 0 se suma el valor shifteado x veces
+SHL EBX, 1	; Se shiftea antes del nuevo ciclo se sume o no
+JMP CICLO
+
+FIN:
+STOP

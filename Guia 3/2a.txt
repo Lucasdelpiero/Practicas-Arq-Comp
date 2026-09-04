@@ -1,0 +1,24 @@
+MOV EAX, 0X01		; lee decimales
+LDL ECX, 1		; lee de a 1 valor 1 bit
+LDH ECX, 1
+MOV AC, 0		; guardo la cant de bits leidos;
+MOV EFX, 0;		; EFX numero final
+
+LECTURA:
+SYS 0x01		; lee del teclado
+CMP EDX, 0		
+JZ SHIFTEA		; Si es cero incrementa y lee de nuevo
+
+CMP EDX, 1
+JPZ SHIFTEA		; Si es uno incrementa y lee de nuevo
+JNZ FIN			; Si no es cero finaliza
+
+SHIFTEA:
+SHL EDX, AC		; el valor ingresado se shiftea segun la cantidad de numeros que se agregan				
+ADD EFX, EDX		; se va acumulando el valor en EFX
+ADD AC, 1
+JMP LECTURA
+
+FIN:
+MOV EDX, EFX
+STOP

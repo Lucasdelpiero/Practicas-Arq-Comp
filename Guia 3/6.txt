@@ -1,0 +1,32 @@
+MOV [EBX], 8
+MOV [ECX], 3
+MOV [EAX], 0
+MOV [EFX], 0			; guarda si es negativo o no
+
+CMP [EBX], 0			; si es negativo se da vuelta EBX y en EFX queda que 1 es negativo
+JPOS SEGUNDO:
+XOR [EFX], 1	
+MULT EBX, -1
+
+SEGUNDO:			; si es negativo se da vuelta ECX
+CMP [ECX], 0
+JPOS RESTA:
+XOR [EFX], 1			; si los 2 son negativos EFX = 0
+MULT ECX, -1
+
+MOV [AC], [EBX]			
+RESTA:
+CMP [AC], [ECX]			; Si el dividendo es menor que el divisor se salta pq no se puede dividir (restar)
+JN ESNEGATIVO
+SUB [AC], [ECX]			
+ADD [EAX], 1		
+JMP RESTA
+
+ESNEGATIVO:
+CMP EFX, 0
+JZ FIN
+MULT [EAX], *-1
+
+FIN:
+STOP
+

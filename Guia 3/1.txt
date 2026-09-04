@@ -1,0 +1,37 @@
+MOV EAX, 0X01		; Lee numeros de 1 byte
+MOV AC, 0		
+MOV LDH ECX, 1
+MOV LDL ECX, 1
+MOV EDX, DS
+
+INICIO:
+SYS 0X1
+CMP [EDX], -1		; lee valores hasta encontrar un -1
+JNZ FIN
+
+ADD AC, 1
+ADD EDX, 1		; mueve la direccion a medida que hay cada vez mas num
+JMP INICIO
+FIN:
+
+MOV EAX, AC		; EAX (cantidad valores);
+MOV EFX, 0		; EFX (TOTAL)
+MOV AC, 0		; ac (como un i)
+MOV EDX, DS
+
+ACUMULA:
+CMP EAX, AC		; arranca while 
+JZ PROM
+ADD EFX, [EDX + AC]	; acumula
+ADD AC, 1	
+JMP ACUMULA
+
+PROM:
+MOV EDX, DS
+ADD EDX, AC 
+DIV EFX, EAX		; saca promedio
+MOV [EDX], EFX		; guardo el valor donde estaba el -1
+
+MOV EAX, 0X01
+SYS 0X2
+STOP
