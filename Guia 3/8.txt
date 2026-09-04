@@ -1,20 +1,19 @@
 MOV EAX, 0X01
 MOV EBX, 0	; cant de datos ingresados
+MOV EDX, DS
 
 LEER:
-MOV EDX, [DS + EBX]
 LDH ECX, 4
 LDL ECX, 1
 SYS 0X01
 
 CMP [EDX], 0	; si ingresa negativo deja de agregar datos
-JN SIGUE
-ADD EBX, 1
+JN FINLECTURA
+ADD EDX, 4
 JMP LEER;	; si no es negativo lo agrega
-MULT EBX, 4	; se multiplica la cant de valores por el tamaño y se llega hasta donde esta el ultimo dato
-ADD EBX, 4	; EBX ahora guarda hasta donde hay que leer (skipea si llega aca
 
-SIGUE:
+FINLECTURA:
+MOV EBX, EDX	; EBX ahora guarda hasta donde hay que leer (skipea si llega aca)
 MOV EDX, DS		; comienza a leer desde la posicion del DS
 
 ;---------CICLO EXTERNO
