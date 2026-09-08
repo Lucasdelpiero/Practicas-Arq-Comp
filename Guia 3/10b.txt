@@ -1,0 +1,5 @@
+Se puede usar el valor ingresado como el desplazamiento respecto de DS y si se quiere un desplazamiento mayor, para guardar hardcodeado el valor mas grande ingresado.
+Por cada valor ingresado se escribe [numero] = 1
+Luego cuando escribimos los N - 1 para ver cual es el faltante, viajamos a su direccion y lo cambiamos por un 0
+Cuando metamos los N - 1 numeros, recorremos desde el DS mas desplazamiento hasta el numero mas alto, donde encontremos un
+1, restamos el desplazamiento y obtendremos el numero faltante
