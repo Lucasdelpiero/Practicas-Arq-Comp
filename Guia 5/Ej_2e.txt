@@ -1,0 +1,50 @@
+; PUSH <<PUNTERO_STRING>>
+; PUSH <<CARACTER>>
+; PUSH <<PUNTERO_ARRAY_PUNTEROS>>
+; ADD SP, 4
+; REEMPLAZA EL CARACTER DEL STRING CON EL NULL TERMINATOR
+; Y EN CADA ELEMENTO DE ARRAY PONE LA DIRECCION DONDE COMIENZA UNA PALABRA
+; Y METE UN -1 PARA INDICAR EL FIN
+
+PUSH BP
+MOV BP, SP
+PUSH EAX
+PUSH EBX
+PUSH ECX
+
+MOV EAX, [BP + 12]  ; inicioPal   = punter_string
+MOV EBX, [BP + 12]  ; posCaracter = puntero_string
+MOV ECX, [BP + 4 ]  ; ECX = puntero_array_punteros
+
+SIGUE_CICLO_SPLIT: CMP [EBX], 0 ; palabra[i] == 'null'
+JZ FIN_SPLIT
+
+CMP [EBX], [BP + 8] ; palabra[i] == caracter
+JZ REEMPLAZA_SPLIT
+
+ADD EBX,1
+JMP SIGUE_CICLO_SPLIT
+
+REEMPLAZA_SPLIT: MOV [EBX], 0
+MOV [ECX], EAX 	; guarda en el array donde comienza la palabra
+ADD ECX, 1     	; se va al siguiente en el array
+ADD EBX, 1	; se mueve el caracter adelante
+MOV EAX, EBX  	; inicioPal = posCaracter
+
+JMP SIGUE_CICLO_SPLIT
+
+FIN_SPLIT: MOV [ECX], EAX 
+ADD ECX, 1     	; se va al siguiente en el array
+MOV [ECX], -1
+
+POP ECX
+POP EBX
+POP EAX
+MOV SP, BP
+POP BP
+RET
+
+
+
+
+ 

@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1791066127 source:c:\users\cabro\onedrive\desktop\arq comp\ejercicios programacion\guia 5\ej_1\potencia.c
+
+1791066302 source:c:\users\cabro\onedrive\desktop\arq comp\ejercicios programacion\guia 5\ej_1\main.c
+	<stdio.h>
+	<stdlib.h>
+	"potencia.h"
+
+1791066210 c:\users\cabro\onedrive\desktop\arq comp\ejercicios programacion\guia 5\ej_1\potencia.h
+

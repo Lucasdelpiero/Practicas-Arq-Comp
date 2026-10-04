@@ -1,0 +1,64 @@
+; PUSH <<PUNTERO>>
+; ADD SP, 4
+; DEVUELVE EL STRING QUITANDO LOS ESPACIOS BLANCOS DEL PRINCIPIO Y DEL FINAL
+
+STRIM:
+PUSH BP
+MOV BP, SP
+PUSH EAX        ; destino
+PUSH EBX        ; recorrido
+PUSH ECX        ; ultimo caracter valido
+
+MOV EAX, [BP + 8] ; EAX = PUNTERO
+MOV EBX, [BP + 8] ; EBX = PUNTERO
+
+;-----------------------------------
+; QUITAR ESPACIOS DEL PRINCIPIO
+;-----------------------------------
+
+ESPACIO_BEGIN_STRIM:
+CMP [EBX], 32
+JNZ MUEVE_STRING
+
+CMP [EBX], 0
+JZ FIN_STRING_STRIM
+
+ADD EBX, 1
+JMP ESPACIO_BEGIN_STRIM
+
+
+;----------------------------
+; COPIAR STRING
+;----------------------------
+
+MUEVE_STRING:
+CMP [EBX], 0
+JZ FIN_STRING_STRIM
+
+MOV [EAX], [EBX]
+
+CMP [EBX], 32
+JZ NO_ACTUALIZA_ULTIMO
+
+MOV ECX, EAX        ; ultimo caracter distinto de espacio
+
+NO_ACTUALIZA_ULTIMO:
+ADD EAX, 1
+ADD EBX, 1
+JMP MUEVE_STRING
+
+
+;-----------------------------------------------
+; TERMINAR DESPUES DEL ULTIMO CARACTER NO ESPACIO
+;-----------------------------------------------
+
+FIN_STRING_STRIM:
+ADD ECX, 1
+MOV [ECX], 0
+
+POP ECX
+POP EBX
+POP EAX
+MOV SP, BP
+POP BP
+RET

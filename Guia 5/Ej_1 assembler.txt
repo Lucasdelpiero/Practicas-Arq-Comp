@@ -1,0 +1,53 @@
+; Especificacion subrutina
+; PUSH <<BASE>>
+; PUSH <<EXP>>
+; CALL POTENCIA_IT / POTENCIA_REC
+; ADD SP, 4
+; DEVUELVE EN EAX EL RESULTADO
+
+
+POTENCIA_IT: PUSH BP
+MOV BP, SP
+SUB SP, 4		;total = [BP - 4]
+MOV [BP - 4], 1  	;total = 1
+CICLO_IT:
+MULT [BP - 4],[BP, + 8] ;total *= base
+SUB [BP + 4], 1;  	;exp--
+CMP EXP, 0
+JNP FIN_IT
+JMP CICLO_IT
+
+FIN_IT: MOV EAX, [BP - 4] 	; EAX = total;
+ADD SP, 4
+MOV SP, BP
+RET
+
+############################################################
+; Especificacion subrutina
+; PUSH <<BASE>>
+; PUSH <<EXP>>
+; CALL POTENCIA_REC
+; ADD SP, 4
+; DEVUELVE EN EAX EL RESULTADO
+
+POTENCIA_REC: PUSH BP
+MOV BP, SP
+
+CMP [BP + 4], 1 ; exp <= 1
+JNP EXP_ES_1
+
+SUB [BP + 4], 1 ; exp--
+PUSH [BP + 8]	; push base
+PUSH [BP + 4]	; push exp
+CALL POTENCIA_REC
+ADD SP, 4
+MULT EAX, [BP + 8]	; eax *= base
+JMP FIN_REC
+
+EXP_ES_1: MOV EAX, [BP + 8] ; eax = base
+
+FIN_REC: MOV SP, BP
+POP BP
+RET
+
+
