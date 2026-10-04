@@ -1,0 +1,60 @@
+; PUSH <<PUNTERO_STRING>>
+; ADD SP, 4
+; CONVIERTE EL STRING EN NUMERO
+
+; "758" es 3 de largo, guardo en cantMult = 2
+; tomo al "7" y resto 48 quedo en 7:    "7" - 48 = 7 
+; multiplico 7 por 10 (cantMult) veces y resto 1 en cantMult
+; 7 -> 700     cantMult = 1;
+; con el segundo caracter lo mismo
+
+STR_TO_INT: PUSH BP
+MOV BP, SP
+PUSH EAX	; EAX: posCaracter
+PUSH EBX	; EBX: i para las multiplicaciones
+PUSH ECX	; ECX: cantMult
+PUSH EDX	; EDX: numeroTemp
+PUSH EFX	; EFX: numeroFinal
+
+MOV EAX, [BP + 8]
+MOV EBX, 0
+MOV EFX, 0
+
+PUSH EAX
+CALL SLEN	; en ECX queda el largo de la palabra
+ADD SP, 4
+SUB ECX, 1	; hay que multiplicar por 10 un numero menos que el LEN
+
+CICLO_STR_TO_INT: 
+CMP [EAX], 0	; termina de leer string
+JZ FIN_CICLO_STR_TO_INT
+
+MOV EDX, b[EAX]	; tomo solo el caracter tal
+SUB EDX, 48	; le resto 48 para tener el valor del numero caracter
+
+CICLO_MULT_STR_TO_INT: 
+CMP ECX, EBX    ; i = 0
+JZ TERMINA_MULT_STR_TO_INT
+MULT EDX, 10
+
+ADD EBX, 1
+JMP CICLO_MULT_STR_TO_INT
+
+TERMINA_MULT_STR_TO_INT: 
+ADD EAX, 1      ; posCaracter++
+SUB ECX, 1      ; cantMult--
+ADD EFX, EDX    ; numeroFinal += numeroTemp
+MOV EBX, 0 	; i = 0
+
+JMP CICLO_STR_TO_INT
+
+FIN_CICLO_STR_TO_INT:
+MOV [BP + 8], EFX	; Escribo el entero donde antes empezaba el string
+POP EFX 
+POP EDX
+POP ECX
+POP EBX
+POP EAX
+MOV SP, BP
+POP BP
+RET
