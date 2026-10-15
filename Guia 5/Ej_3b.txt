@@ -1,0 +1,57 @@
+; PUSH <<NUMERO>>
+; PUSH <<COMIENZA_PALABRA>>
+; ADD SP, 4
+; CONVIERTE UN ENTERO A SU REPRESENTACION EN STRING
+
+; 758 tiene 3 de largo, divido por un multiplo de 10 mas grande quel num
+; y ciclo dividiendo ambos por 10, cuando el resultado de mas de 1
+; empiezo a escribir a un string y muevo para adelante
+; numDividido, auxiliarDiv, divisor, posString, palabra
+
+INT_TO_STR: 
+PUSH BP
+MOV BP, SP
+PUSH EAX	; EAX: numDividido
+PUSH EBX	; EBX: divisor
+PUSH ECX	; ECX: posString
+PUSH EDX	; EDX: palabra
+PUSH EEX	; EEX: comienzaPalabra
+PUSH EFX	; EFX: auxDividido
+
+MOV EAX, [BP + 12] ; numDivido = NUMERO
+MOV EEX, [BP + 8 ] ; comienzaPalabra = COMIENZA_PALABRA
+MOV EDX, EEX	   ; palabra = comienzaPalabra	
+MOV EBX, 1 	   ; divisor = 1
+MOV ECX, 0	   ; posString = 0
+
+CICLO_BUSCA_DIVISOR:
+CMP EBX, EAX
+JP CICLO_INT_TO_STR
+MULT EBX, 10
+JMP CICLO_BUSCA_DIVISOR
+
+CICLO_INT_TO_STR: 
+DIV EBX, 10		; cada ciclo el divisor se divide por 10
+DIV EAX, EBX 		; el aux queda con el valor 0-9 
+MOV EFX, AC  		;en caso que el AC se altere con el MOV o ADD 
+ADD EAX, 48	     	; se pasa del valor int al str
+MOV b[EDX], EAX  	; guardo valor de caracter
+ADD EDX, 1	        ; paso al siguiente caracter
+MOV EAX,  EFX          	; sigo con el resto
+
+CMP EBX, 1	     	; sigo hasta quedarme sin digitos
+JZ FIN_INT_TO_STR
+JMP CICLO_INT_TO_STR
+
+FIN_INT_TO_STR:	
+MOV b[EDX], 0		; agrago el "\0" al final del string
+POP EFX
+POP EEX
+POP EDX
+POP ECX
+POP EBX
+POP EAX
+MOV SP, BP
+POP BP
+RET
+

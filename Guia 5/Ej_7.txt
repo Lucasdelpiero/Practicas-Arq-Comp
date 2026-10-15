@@ -1,0 +1,34 @@
+a)
+; PUSH <<A>>
+; PUSH <<B>>
+; PUSH <<C>>
+; ADD SP, 4
+
+
+b)
+; MOV EBX, [BP - 4]
+; PUSH <<[EBX]>>
+; PUSH <<B>>
+; ADD SP, 4
+; DEVUELVE RESULTADO EN EAX
+
+
+c)
+; MOV EAX, BP
+; SUB BP, 4
+; MOV EBX, [BP - 8]
+; MOV ECX, [BP - 12]
+; PUSH EAX
+; PUSH [EBX]
+; PUSH [ECX]
+; CALL PROCE
+; ADD SP, 4
+
+d)
+; MOV ECX, [BP - 12]
+; PUSH ECX
+; PUSH [BP - 4]
+; PUSH [BP - 8]
+; CALL FUNC
+; ADD SP, 4
+; RESULTADO SE GUARDA EN DONDE APUNTE "c"
