@@ -1,0 +1,61 @@
+; PUSH <<X>>
+; PUSH <<PUNTERO_VECTOR>>
+; CALL CALCULO
+; ADD SP, 8
+
+
+;;;;;;;;;; MAIN
+MOV EDX, 3	; int j = 3
+MOV EAX, SP	; EAX: puntero a arr[]
+ADD SP, 20	; Se guarda en pila, 5 x 4 bytes = 20
+
+MOV EBX, EAX
+MOV [EBX], 1020	; arr[0] = 1020
+MOV ECX, [EBX]	; auxiliar = arr[0]
+OR ECX, 0X3FF	; arr[0] | 0x3ff
+ADD EBX, 4	; SUMA 4 PORQUE INT OCUPA 4 BYTES
+MOV [EBX], ECX; arr[1] = arr[0] | 0x3ff
+
+PUSH EAX
+PUSH EDX
+CALL CALCULO
+ADD SP 8
+
+JMP FIN
+
+
+
+CALCULO:
+PUSH BP
+MOV BP, SP
+PUSH EAX	; EAX : posActual
+PUSH EBX	; EBX : posAnterior
+PUSH ECX
+PUSH EEX	; EEX : vec[]
+
+
+MOV EEX, [BP + 12]	; EEX = vec[]
+MOV EAX, [BP + 8]	; EAX = x
+SHL EAX, 2		; x * 4 IMPORTANTE PORQUE OCUPA 4 BYTES CADA INT
+MOV EBX, EAX		; EBX = x * 4 bytes
+ADD EAX, EEX		; EAX = vec[x]
+
+ADD EBX, EEX
+SUB EBX, 4		; EBX = x - 1
+MOV EBX, [EBX]		; EBX = vec[x - 1]
+
+MOV ECX, [EEX]		; ECX = vec[0]
+AND EBX, ECX		; vec[x-1] & vec[0]
+
+MOV [EAX], EBX
+
+
+POP EEX
+POP EBX
+POP ECX
+POP EAX
+MOV SP, BP
+POP BP
+RET
+
+FIN:

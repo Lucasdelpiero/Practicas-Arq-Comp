@@ -1,0 +1,66 @@
+MOV EAX, SP     ; EAX = vec[]
+ADD SP, 36      ; EAX = vec[9]
+
+
+;; MAIN
+MOV EBX, 2      ; i = 2
+MOV ECX, EAX    ; ECX = vec[]
+
+MOV EDX, EBX    ; EDX = i
+SHL EDX, 2      ; EDX = i * 4 bytes
+ADD ECX, EDX    
+MOV [ECX], 501
+
+MOV EEX, [ECX]  ; EEX = vec[i]
+AND EEX, 0XF0F0 ; EEX = 0xF0F0 & vec[i]
+
+mov EDX, EAX    ; EDX = vec[]
+MOV [EDX], EEX  ; vec[0] = 0XF0F0 & vec[i]
+PUSH EBX
+PUSH EAX
+CALL PROCE
+ADD SP, 4
+
+JMP FIN
+
+
+; PUSH << X >>
+; PUSH << VECTOR W >>
+; CALL PROCE
+; ADD SP, 8
+
+PROCE:
+PUSH BP
+MOV BP, SP
+PUSH EAX ; EAX = w[]
+PUSH EBX ; EBX = w[x]
+PUSH ECX ; ECX = w[x-1]
+PUSH EDX ; EDX = w[0]
+
+MOV EAX, [BP + 8] ; EAX = w[]
+MOV EBX, [BP + 12]; EBX = x
+SHL EBX, 2        ; EBX = x * 4 bytes
+
+MOV ECX, EBX    
+SUB ECX, 4        ; ECX = x - 1
+
+MOV EDX, [EAX]  ; EDX = w[0]
+
+ADD EBX, EAX    ; EBX = *w[x]
+ADD ECX, EAX    ; ECX = *w[x-1]
+
+MOV EBX, [EBX]  ; EBX = w[x]   Contiene valor y no un puntero
+
+OR EBX, EDX     ; w[x] | w[0]
+
+MOV [ECX], EBX  ; w[x - 1] = w[x] | w[0]
+
+POP EDX
+POP ECX
+POP EBX
+POP EAX
+MOV SP, BP
+POP BP
+RET
+
+FIN:
