@@ -1,47 +1,99 @@
 ; CONSULTAR CON EL PASAJE DE VALORES DE SHORT A INT PARA HACER LAS OPERACIONES
 SIZE_INT EQU 4
 SIZE_OP EQU 16
-SIZE_CAR EQU 1
 SIZE_PALABRA EQU 4     ; se usa para el iterador, moverme esta cantidad de bytes
 
 ;;;;;;;;;;;; RESERVA ESPACIO PARA PUNTEROS
 
-MOV EBX, SP     ;  EBX = ops[]
-ADD SP, SIZE_OP      ; 4 punteros * 4 bytes
+MOV EBX, SP 		;  EBX = ops[]
+ADD SP, SIZE_OP      	; 4 punteros * 4 bytes
 
 ;;;;;;;;;;; RESERVA ESPACIO PARA STRINGS
+MOV EFX, SP		; EFX = nom[]
+ADD SP, 16		; 4 punteros * 4 bytes
 
 MOV EDX, SP     ; EDX = direccion de "ADD"
 MOV [SP], "ADD\0"
 ADD SP, SIZE_PALABRA
-MOV [EBX], EDX  ; nom[0] = direccion de "ADD"
+MOV [EFX], EDX  ; nom[0] = direccion de "ADD"
 
 MOV EDX, SP     ; 
 MOV [SP], "SUB\0"
 ADD SP, SIZE_PALABRA
-MOV [EBX + 4], EDX  ; 
+MOV [EFX + 4], EDX  ; 
 
 MOV EDX, SP     ; 
 MOV [SP], "MUL\0"
 ADD SP, SIZE_PALABRA
-MOV [EBX + 8], EDX  ; 
+MOV [EFX + 8], EDX  ; 
 
 MOV EDX, SP     ; 
 MOV [SP], "DIV\0"
 ADD SP, SIZE_PALABRA
-MOV [EBX + 12], EDX  ; 
+MOV [EFX + 12], EDX  ; 
 
 
 
-;;;;;;;;; MAIN
+;;;;;;;;;;;;;;;;;;;;;;;;;; MAIN
 
 MAIN:
+PUSH BP
+MOV BP, SP
+SUB SP, 4   ; reservo espacio para x e y
+; w[BP - 2] : x
+; w[BP - 4] : y
 
+MOV EAX, 0X01
+MOD EDX, DS
+LHL ECX, 4	; deberia ser de 2 bytes pero asi no hago operacions
+LDL ECX, 2
+SYS 0X1
 
+MOV w[BP - 2], [EDX]
+MOV w[BP - 4], [EDX + 2]
 
+MOV EEX, 0	; EEX : i = 0
 
+CICLO_MAIN:
+CMP EEX, 4
+JNN FIN_CICLO_MAIN
 
-;;;;;;;;;; FUNCIONES
+;;; PRINT NOM
+MOV EDX, EEX
+MUL EDX, SIZE_INT
+ADD EDX, EFX           ; EDX = i + nom[]
+MOV EDX, [EDX]         ; EDX = nom[i]
+
+MOV EAX, 0X01
+LHL ECX, 4
+LDL ECX, 2
+SYS 0X2
+
+;;; PRINT OPS
+MOV EDX , EEX
+MUL EDX, 4
+ADD EDX, EBX    ; EDX =  i + ops[]
+MOV EDX, [EDX]  ; EDX = ops[i]
+
+PUSH w[BP - 2]
+PUSH w[BP - 4]
+CALL [EDX]
+ADD SP, 8
+MOV [DS], EFX
+
+MOV EAX, 0X01
+MOV EDX, DS
+LHL ECX, 4
+LDL ECX, 1
+SYS 0X2
+
+ADD EEX, 1
+JMP CICLO_MAIN
+
+FIN_CICLO_MAIN:
+JMP FIN
+
+;;;;;;;;;;;;;;;;;;;;;;;;;; FUNCIONES
 
 ; SUM
 ; PUSH << A >>
