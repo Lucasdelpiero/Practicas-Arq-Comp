@@ -1,0 +1,62 @@
+SYZE_INT equ 4
+SYZE_SHORT equ 2
+S: DD 0 ; inicializacion de static s = 0
+
+MAIN:
+MOV EAX, SP         ; EAX : vec
+MOV EBX, SYZE_INT
+MULT EBX, 100
+ADD SP, EBX         ; EAX = vec = malloc(sizeof(int) * 100)
+
+MOV ECX, SP         ; ECX : z
+ADD SP, SYZE_SHORT  ; z = malloc(sizeof(short int))
+MOV [ECX] = 100     ; *z = 100 
+
+PUSH EAX
+PUSH w[ECX]
+CALL SUM
+ADD SP, 8
+JMP FIN
+
+; SUM
+; PUSH << VEC >>
+; PUSH << N >>
+; ADD SP, 8
+; DEVUELVE EN EFX EL VALOR
+
+SUM:
+PUSH BP
+MOV BP, SP
+PUSH EAX    ; EAX = vec[]
+PUSH EBX    ; vec[x]
+PUSH ECX    ; ECX : i
+
+MOV EAX, [BP + 12]
+
+MOV ECX, 0  ; i = 0
+
+CICLO_SUM:
+CMP ECX, [BP + 8]
+JNN FIN_SUM
+MOV EBX, ECX    ;EBX = i
+MULT EBX, SYZE_INT
+ADD EBX, EAX    ;EBX = i + vec[]
+MOV EBX, [EBX]  ;EBX = vec[i]
+ADD [S], EBX    ;s = s + vec[i]
+
+ADD ECX, 1 ; i++
+JMP CICLO_SUM
+
+FIN_SUM:
+MOV EFX, [S]
+POP ECX
+POP EBX
+POP EAX
+MOV SP, BP
+POP BP
+RET
+
+FIN:
+
+
+

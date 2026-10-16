@@ -1,0 +1,106 @@
+; CONSULTAR CON EL PASAJE DE VALORES DE SHORT A INT PARA HACER LAS OPERACIONES
+SIZE_INT EQU 4
+SIZE_OP EQU 16
+SIZE_CAR EQU 1
+SIZE_PALABRA EQU 4     ; se usa para el iterador, moverme esta cantidad de bytes
+
+;;;;;;;;;;;; RESERVA ESPACIO PARA PUNTEROS
+
+MOV EBX, SP     ;  EBX = ops[]
+ADD SP, SIZE_OP      ; 4 punteros * 4 bytes
+
+;;;;;;;;;;; RESERVA ESPACIO PARA STRINGS
+
+MOV EDX, SP     ; EDX = direccion de "ADD"
+MOV [SP], "ADD\0"
+ADD SP, SIZE_PALABRA
+MOV [EBX], EDX  ; nom[0] = direccion de "ADD"
+
+MOV EDX, SP     ; 
+MOV [SP], "SUB\0"
+ADD SP, SIZE_PALABRA
+MOV [EBX + 4], EDX  ; 
+
+MOV EDX, SP     ; 
+MOV [SP], "MUL\0"
+ADD SP, SIZE_PALABRA
+MOV [EBX + 8], EDX  ; 
+
+MOV EDX, SP     ; 
+MOV [SP], "DIV\0"
+ADD SP, SIZE_PALABRA
+MOV [EBX + 12], EDX  ; 
+
+
+
+;;;;;;;;; MAIN
+
+MAIN:
+
+
+
+
+
+;;;;;;;;;; FUNCIONES
+
+; SUM
+; PUSH << A >>
+; PUSH << B >>
+; ADD SP, 8
+; DEVUELVE EN EAX EL RESULTADO
+
+SUM:
+PUSH BP
+MOV BP, SP
+MOV EAX, w[BP + 12]
+ADD EAX, w[BP + 8]
+MOV SP, BP
+POP BP
+RET
+
+; SUB
+; PUSH << A >>
+; PUSH << B >>
+; ADD SP, 8
+; DEVUELVE EN EAX EL RESULTADO
+
+SUB:
+PUSH BP
+MOV BP, SP
+MOV EAX, w[BP + 12]
+SUB EAX, w[BP + 8]
+MOV SP, BP
+POP BP
+RET
+
+; MUL
+; PUSH << A >>
+; PUSH << B >>
+; ADD SP, 8
+; DEVUELVE EN EAX EL RESULTADO
+
+MUL:
+PUSH BP
+MOV BP, SP
+MOV EAX, w[BP + 12]
+MUL EAX, w[BP + 8]
+MOV SP, BP
+POP BP
+RET
+
+; DIV
+; PUSH << A >>
+; PUSH << B >>
+; ADD SP, 8
+; DEVUELVE EN EAX EL RESULTADO
+
+DIV:
+PUSH BP
+MOV BP, SP
+MOV EAX, w[BP + 12]
+DIV EAX, w[BP + 8]
+MOV SP, BP
+POP BP
+RET
+
+FIN:
