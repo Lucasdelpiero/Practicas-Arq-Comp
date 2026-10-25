@@ -1,5 +1,6 @@
 ; BORRAR_NODO
 NODO_SIZE EQU 8
+NULL EQU -1
 VAL EQU 0
 SIG EQU 4
 
@@ -23,11 +24,11 @@ MOV EDX, [BP + 8]   ; EDX = DOBLE PUNTERO_DOBLE
 CICLO_BORRAR:
 MOV EBX, [EDX]          ; EBX = PUNTERO A NODO
 
-CMP EBX, 0
+CMP EBX, NULL
 JZ FIN_BORRAR           ; llegamos al final 
 
 CMP [EBX + VAL], EAX    ; nodo.valor - valor 
-JNN ENCONTRADO          ; encontramos el valor
+JZ ENCONTRADO          ; encontramos el valor
 
 MOV EDX, EBX        ; EDX apunta al nodo actual
 ADD EDX, SIG        ; EDX apunta apunta a su sig
@@ -35,8 +36,8 @@ ADD EDX, SIG        ; EDX apunta apunta a su sig
 JMP CICLO_BORRAR
 
 ENCONTRADO:
-MOV ECX, [EBX + SIG]    ; ECX = siguiente
-MOV [EDX], ECX          ; el enlace saltea el nodo actual  
+MOV ECX, [EBX + SIG]    ; ECX = siguiente                       ; nodoSiguiente = nodoActual->sig
+MOV [EDX], ECX          ; el enlace saltea el nodo actual       ; nodoAnterior->sig = nodoSiguiente
 
 ; EDX apunta al enlace que apunta al nodo actual (EBX).
 ; ECX obtiene el puntero al nodo siguiente.
